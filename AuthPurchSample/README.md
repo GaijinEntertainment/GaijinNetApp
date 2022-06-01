@@ -83,12 +83,12 @@ else
 
 ### Creaing yuplay2 session
 
-Each yuplay2 session must be created via `yuplay2_create_session()` function or similar
+Each yuplay2 session must be created via `yuplay2_create_session()` function or similar.
 
 ```
 IYuplay2Session* yuplay2 = ::yuplay2_create_session("Gaijin.Net Sample App");
 ```
-Don't forget to free session after use
+Don't forget to free session after use.
 
 ```
 yuplay2->free();
@@ -129,7 +129,7 @@ if (res == YU2_2STEP_AUTH)
 }
 ```
 
-`YU2_OK` status from `login` or `twoStepLogin` means session was authorized successfully
+`YU2_OK` status from `login` or `twoStepLogin` means session was authorized successfully.
 
 ### Get basic user info
 
@@ -157,13 +157,21 @@ printf("Nick: %s\n", userInfo->getNick());
 userInfo->free();
 ```
 
-### Checking purchase
+### Check purchase
 
 Game items API methods are provided by `IYuplay2ItemProc` interface provided by `IYuplay2Session::item()`.
 
-It is better to check all game items with one query so we use `getMultiPurchasesCount` method. It accepts array of item GUIDs and returns `IYuplay2ItemPurchases` object to check purchase count of each GUID.
+It is better to check all game items by one request so we use `getMultiPurchasesCount` method. It accepts array of item GUIDs and returns `IYuplay2ItemPurchases` object to check purchase count of each GUID.
 
 ```
+//GUIDs to check purchase count
+const char* guids[] = {
+  "CFAF36F2-4448-478E-BA0C-C0DC5C829BE1" //Gaijin.Net Developer item
+  //Add more GUIDs of your game items in this array
+};
+
+unsigned guidsCnt = sizeof(guids) / sizeof(guids[0]);
+
 IYuplay2ItemPurchases* purch = NULL;
 res = yuplay2->item()->getMultiPurchasesCountSync(guids, guidsCnt, &purch);
 
@@ -186,4 +194,36 @@ for (unsigned i = 0; i < purch->getGuidsCount(); ++i)
 
 purch->free();
 
+```
+
+### Get basic item info
+
+Basic item info is implemented by `IYuplay2ItemInfoBase` interface and include GUID, title, store URL and short description.
+
+It is better to receive multiple items by one request, so we use `getMultiItemsInfo` method. It accepts array of item GUIDs and returns `IYuplay2ItemsInfo` object to get info about each GUID.
+
+```
+IYuplay2ItemsInfo* itemInfo = NULL;
+res = yuplay2->item()->getMultiItemsInfoSync(guids, guidsCnt, &itemInfo);
+
+if (res != YU2_OK)
+{
+  printf("Couldn't get info of %u items: %s\n", guidsCnt, ::yuplay2_status_string(res));
+
+  yuplay2->free();
+  return 1;
+}
+
+//List items
+for (unsigned i = 0; i < itemInfo->getGuidsCount(); ++i)
+{
+  const char* guid = itemInfo->getGuid(i);
+  IYuplay2ItemInfoBase* item = itemInfo->itemInfo(guid);
+
+  printf("GUID: %s\n", guid);
+  printf("Title: %s\n", item->getTitle());
+  printf("URL: %s\n", item->getUrl());
+}
+
+itemInfo->free();
 ```
