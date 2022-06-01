@@ -1,11 +1,11 @@
 Authorization and purchase sample
 ===
 
-This sample demonstrates how to check Gaijin.Net authorization and purchase count using yuplay2 API library
+This sample demonstrates how to check Gaijin.Net authorization and purchase count using yuplay2 API library.
 
 ### Overview
 
-yuplay2 library offers its API via session object. One should create this session with `yuplay2_create_session()` function or similar.
+yuplay2 library offers its API via session object. One should create this session via `yuplay2_create_session()` function or similar.
 
 After session created it may be authorized and used to retrieve some user-specific data like basic profile or purchases. This sample demonstrates authorization with login and password.
 
@@ -78,5 +78,112 @@ else
 {
   printf("Couldn't check authorization: %s\n", ::yuplay2_status_string(result));
 }
+
+```
+
+### Creaing yuplay2 session
+
+Each yuplay2 session must be created via `yuplay2_create_session()` function or similar
+
+```
+IYuplay2Session* yuplay2 = ::yuplay2_create_session("Gaijin.Net Sample App");
+```
+Don't forget to free session after use
+
+```
+yuplay2->free();
+```
+
+`free()` stops all active asyncronous API requests.
+
+### Checking authorization
+
+Gaijin.Net password authorization use obligatory login and password with optional TOTP 2-step code required for some accounts.
+
+First we try to check login and password only. If this account have no 2-step assigned or this computer was authorized as trusted, TOTP will not be required for authorization.
+
+```
+Yuplay2Status res;
+
+res = yuplay2->loginSync(login.c_str(), password.c_str(), false);
+```
+
+Operation result `YU2_2STEP_AUTH` means autorization server needs additional TOTP code. Ask user for it and use with `twoStepLogin`
+
+```
+if (res == YU2_2STEP_AUTH)
+{
+  printf("2-step code: ");
+  totp = getLogin();
+
+  res = yuplay2->twoStepLoginSync(login.c_str(), password.c_str(), totp.c_str(), false);
+
+  if (res != YU2_OK)
+  {
+    printf("Couldn't check authorization of %s: %s\n", login.c_str(),
+      ::yuplay2_status_string(res));
+
+    yuplay2->free();
+    return 1;
+  }
+}
+```
+
+`YU2_OK` status from `login` or `twoStepLogin` means session was authorized successfully
+
+### Get basic user info
+
+User API methods are provided by `IYuplay2UserProc` interface provided by `IYuplay2Session::user()`.
+
+Basic profile is implemented by `IYuplay2UserInfo` interface and include user ID, UTF-8 nick and tags. It may be received by `getUserInfo` method.
+
+```
+IYuplay2UserInfo* userInfo = NULL;
+
+res = yuplay2->user()->getUserInfoSync(&userInfo);
+
+if (res != YU2_OK)
+{
+  printf("Couldn't get user info of %s: %s\n", login.c_str(),
+    ::yuplay2_status_string(res));
+
+  yuplay2->free();
+  return 1;
+}
+
+printf("User ID: %lld\n", userInfo->getId());
+printf("Nick: %s\n", userInfo->getNick());
+
+userInfo->free();
+```
+
+### Checking purchase
+
+Game items API methods are provided by `IYuplay2ItemProc` interface provided by `IYuplay2Session::item()`.
+
+It is better to check all game items with one query so we use `getMultiPurchasesCount` method. It accepts array of item GUIDs and returns `IYuplay2ItemPurchases` object to check purchase count of each GUID.
+
+```
+IYuplay2ItemPurchases* purch = NULL;
+res = yuplay2->item()->getMultiPurchasesCountSync(guids, guidsCnt, &purch);
+
+if (res != YU2_OK)
+{
+  printf("Couldn't check purchases of %u items: %s\n", guidsCnt, ::yuplay2_status_string(res));
+
+  yuplay2->free();
+  return 1;
+}
+
+//List purhase count
+for (unsigned i = 0; i < purch->getGuidsCount(); ++i)
+{
+  const char* guid = purch->getGuid(i);
+
+  printf("GUID: %s\n", guid);
+  printf("Purchase count: %d\n\n", purch->purchaseCount(guid));
+}
+
+purch->free();
 
 ```
