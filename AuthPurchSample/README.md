@@ -15,7 +15,7 @@ Most of API methods have both synchronous (using `Sync` suffix) and asynchronous
 
 Synchronous method lock thread until API answer received and return `Yuplay2Status` with status of operation. `YU2_OK` means success.
 
-```
+```cpp
 Yuplay2Status result = yuplay2->loginSync(login, password, false);
 
 if (result == YU2_OK)
@@ -30,7 +30,7 @@ else
 
 Asynchronous method run separate thread and send its result in `IYuplay2Cb::onMessage()` callback. It return `Yuplay2Status` with status of thread start. `YU2_OK` means thread was run successfully and callback will be called with thread work result.
 
-```
+```cpp
 struct LoginStatus : public IYuplay2Cb
 {
   Yuplay2Status status = YU2_FAIL;
@@ -85,12 +85,12 @@ else
 
 Each yuplay2 session must be created via `yuplay2_create_session()` function or similar.
 
-```
+```cpp
 IYuplay2Session* yuplay2 = ::yuplay2_create_session("Gaijin.Net Sample App");
 ```
 Don't forget to free session after use.
 
-```
+```cpp
 yuplay2->free();
 ```
 
@@ -102,7 +102,7 @@ Gaijin.Net password authorization use obligatory login and password with optiona
 
 First we try to check login and password only. If this account have no 2-step assigned or this computer was authorized as trusted, TOTP will not be required for authorization.
 
-```
+```cpp
 Yuplay2Status res;
 
 res = yuplay2->loginSync(login.c_str(), password.c_str(), false);
@@ -110,7 +110,7 @@ res = yuplay2->loginSync(login.c_str(), password.c_str(), false);
 
 Operation result `YU2_2STEP_AUTH` means autorization server needs additional TOTP code. Ask user for it and use with `twoStepLogin`
 
-```
+```cpp
 if (res == YU2_2STEP_AUTH)
 {
   printf("2-step code: ");
@@ -137,7 +137,7 @@ User API methods are provided by `IYuplay2UserProc` interface provided by `IYupl
 
 Basic profile is implemented by `IYuplay2UserInfo` interface and include user ID, UTF-8 nick and tags. It may be received by `getUserInfo` method.
 
-```
+```cpp
 IYuplay2UserInfo* userInfo = NULL;
 
 res = yuplay2->user()->getUserInfoSync(&userInfo);
@@ -163,7 +163,7 @@ Game items API methods are provided by `IYuplay2ItemProc` interface provided by 
 
 It is better to check all game items by one request so we use `getMultiPurchasesCount` method. It accepts array of item GUIDs and returns `IYuplay2ItemPurchases` object to check purchase count of each GUID.
 
-```
+```cpp
 //GUIDs to check purchase count
 const char* guids[] = {
   "CFAF36F2-4448-478E-BA0C-C0DC5C829BE1" //Gaijin.Net Developer item
@@ -193,7 +193,6 @@ for (unsigned i = 0; i < purch->getGuidsCount(); ++i)
 }
 
 purch->free();
-
 ```
 
 ### Get basic item info
@@ -202,7 +201,7 @@ Basic item info is implemented by `IYuplay2ItemInfoBase` interface and include G
 
 It is better to receive multiple items by one request, so we use `getMultiItemsInfo` method. It accepts array of item GUIDs and returns `IYuplay2ItemsInfo` object to get info about each GUID.
 
-```
+```cpp
 IYuplay2ItemsInfo* itemInfo = NULL;
 res = yuplay2->item()->getMultiItemsInfoSync(guids, guidsCnt, &itemInfo);
 
