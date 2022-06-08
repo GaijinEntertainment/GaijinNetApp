@@ -31,21 +31,22 @@ else
 Asynchronous method run separate thread and send its result in `IYuplay2Cb::onMessage()` callback. It return `Yuplay2Status` with status of thread start. `YU2_OK` means thread was run successfully and callback will be called with thread work result.
 
 ```cpp
-struct LoginStatus : public IYuplay2Cb
+class LoginStatus : public IYuplay2Cb
 {
-  Yuplay2Status status = YU2_FAIL;
-  bool answerReceived = false;
-  bool loggedIn = false;
+public:
+  bool complete() const { return answerReceived.load(std::memory_order_acquire); }
+  int status() const { return loginStatus.load(std::memory_order_acquire); }
+
+private:
+  std::atomic<bool> answerReceived = { false };
+  std::atomic<int> loginStatus = { YU2_FAIL };
 
   virtual void YU2VCALL onMessage(int msg, Yuplay2Handle req, int status, const void* data)
   {
     if (msg == YUPLAY2_CHECK_LOGIN || msg == YUPLAY2_2STEP_LOGIN)
     {
-      status = status;
-      answerReceived = true;
-
-      if (status == YU2_OK)
-        loggedIn = true;
+      loginStatus.store(status, std::memory_order_release);
+      answerReceived.store(true, std::memory_order_release);
     }
   }
 };
@@ -65,14 +66,18 @@ if (result != YU2_OK)
   return false;
 }
 
-while (!loginStatus.answerReceived)
+while (!loginStatus.complete())
 {
   //Do something useful while answer not received
 }
 
-if (loginStatus.status == YU2_OK)
+if (loginStatus.status() == YU2_OK)
 {
   //Authorization successful, let's check game purchases
+}
+else if (loginStatus.status() == YU2_2STEP_AUTH)
+{
+  //2-step code required. Ask user for it and call twoStepLoginAsync()
 }
 else
 {
