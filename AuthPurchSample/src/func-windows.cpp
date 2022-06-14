@@ -2,6 +2,8 @@
 
 #include <windows.h>
 
+#include <conio.h>
+
 
 #define YUPLAY2_DLL_NAME          "yuplay2.dll"
 #define YUPLAY2_CREATE_SESSION    "yuplay2_create_session"
@@ -46,3 +48,38 @@ bool initProcHandles()
 
   return true;
 }
+
+
+std::string readConsoleString(char echo_char)
+{
+  std::string ret;
+
+  for (;;)
+  {
+    switch (char c = ::_getch())
+    {
+      case '\r':
+        printf("\n");
+        return ret;
+
+      case '\b':
+        if (ret.length())
+        {
+          printf("\b \b");
+          ret.erase(ret.length() - 1, 1);
+        }
+        break;
+
+      case 0x03:
+        ::exit(1);
+        break;
+
+      default:
+        ret += c;
+        printf("%c", echo_char ? echo_char : c);
+    }
+  }
+
+  return ret;
+}
+

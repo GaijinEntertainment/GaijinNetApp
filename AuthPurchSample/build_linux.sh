@@ -1,0 +1,1 @@
+g++ src/functions.cpp src/func-linux.cpp src/gaijin-sample.cpp -Iinclude/yuplay2 -ldl -lpthread -o bin/AuthPurchSample

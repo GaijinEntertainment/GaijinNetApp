@@ -1,8 +1,5 @@
 #include "gaijin-sample.h"
 
-#if _WIN32
-#include <conio.h>
-#endif //_WIN32
 
 Yuplay2CreateSessionProc yuplay2CreateSessionProc = NULL;
 Yuplay2StatusStringProc yuplay2StatusStringProc = NULL;
@@ -23,40 +20,6 @@ const char* yuplay2StatusString(int status)
     return yuplay2StatusStringProc(status, false);
 
   return "";
-}
-
-
-static std::string readConsoleString(char echo_char)
-{
-  std::string ret;
-
-  for (;;)
-  {
-    switch (char c = ::_getch())
-    {
-      case '\r':
-        printf("\n");
-        return ret;
-
-      case '\b':
-        if (ret.length())
-        {
-          printf("\b \b");
-          ret.erase(ret.length() - 1, 1);
-        }
-        break;
-
-      case 0x03:
-        ::exit(1);
-        break;
-
-      default:
-        ret += c;
-        printf("%c", echo_char ? echo_char : c);
-    }
-  }
-
-  return ret;
 }
 
 
