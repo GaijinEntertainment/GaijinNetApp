@@ -1,17 +1,7 @@
-#include <yuplay2_session.h>
+#include "gaijin-sample.h"
 
+#include <stdint.h>
 #include <stdio.h>
-
-#include <string>
-
-
-#if _WIN32
-#include "inc-windows.cpp"
-#endif //_WIN32
-
-
-std::string getLogin();
-std::string getPassword();
 
 
 int main(int argc, char *argv[])
@@ -59,7 +49,7 @@ int main(int argc, char *argv[])
     if (res != YU2_OK)
     {
       printf("Couldn't check authorization of %s: %s\n", login.c_str(),
-        ::yuplay2_status_string(res));
+        ::yuplay2StatusString(res));
 
       yuplay2->free();
       return 1;
@@ -69,7 +59,7 @@ int main(int argc, char *argv[])
   else if (res != YU2_OK)
   {
     printf("Couldn't check authorization of %s: %s\n", login.c_str(),
-      ::yuplay2_status_string(res));
+      ::yuplay2StatusString(res));
 
     yuplay2->free();
     return 1;
@@ -85,13 +75,13 @@ int main(int argc, char *argv[])
   if (res != YU2_OK)
   {
     printf("Couldn't get user info of %s: %s\n", login.c_str(),
-      ::yuplay2_status_string(res));
+      ::yuplay2StatusString(res));
 
     yuplay2->free();
     return 1;
   }
 
-  printf("User ID: %lld\n", userInfo->getId());
+  printf("User ID: %lld\n", (long long int)userInfo->getId());
   printf("Nick: %s\n", userInfo->getNick());
 
   userInfo->free();
@@ -110,7 +100,7 @@ int main(int argc, char *argv[])
 
   if (res != YU2_OK)
   {
-    printf("Couldn't check purchases of %u items: %s\n", guidsCnt, ::yuplay2_status_string(res));
+    printf("Couldn't check purchases of %u items: %s\n", guidsCnt, ::yuplay2StatusString(res));
 
     yuplay2->free();
     return 1;
@@ -122,7 +112,7 @@ int main(int argc, char *argv[])
 
   if (res != YU2_OK)
   {
-    printf("Couldn't get info of %u items: %s\n", guidsCnt, ::yuplay2_status_string(res));
+    printf("Couldn't get info of %u items: %s\n", guidsCnt, ::yuplay2StatusString(res));
 
     purch->free();
     yuplay2->free();
@@ -145,17 +135,6 @@ int main(int argc, char *argv[])
   itemInfo->free();
 
   yuplay2->free();
+
   return 0;
-}
-
-
-std::string getLogin()
-{
-  return readConsoleString(0);
-}
-
-
-std::string getPassword()
-{
-  return readConsoleString('*');
 }

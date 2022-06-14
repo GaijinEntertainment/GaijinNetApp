@@ -5,13 +5,21 @@
 
 //Functions calling convention
 #ifndef YU2CALL
+#ifdef _WIN32
 #define YU2CALL     __stdcall
+#else
+#define YU2CALL
+#endif //_WIN32
 #endif //YU2CALL
 
 
 //Virtual methods calling convention
 #ifndef YU2VCALL
+#ifdef _WIN32
 #define YU2VCALL    __stdcall
+#else
+#define YU2VCALL
+#endif //_WIN32
 #endif //YU2VCALL
 
 
