@@ -1,63 +1,29 @@
 #include <yuplay2_session.h>
 
 #include <stdio.h>
-#include <conio.h>
-
-#include <windows.h>
 
 #include <string>
 
 
-static std::string readConString(char echo_char)
-{
-  std::string ret;
-
-  for (;;)
-  {
-    switch (char c = ::_getch())
-    {
-      case '\r':
-        printf("\n");
-        return ret;
-
-      case '\b':
-        if (ret.length())
-        {
-          printf("\b \b");
-          ret.erase(ret.length() - 1, 1);
-        }
-        break;
-
-      case 0x03:
-        ::exit(1);
-        break;
-
-      default:
-        ret += c;
-        printf("%c", echo_char ? echo_char : c);
-    }
-  }
-
-  return ret;
-}
+#if _WIN32
+#include "inc-windows.cpp"
+#endif //_WIN32
 
 
-static std::string getLogin()
-{
-  return readConString(0);
-}
-
-
-static std::string getPassword()
-{
-  return readConString('*');
-}
+std::string getLogin();
+std::string getPassword();
 
 
 int main(int argc, char *argv[])
 {
   //Create user session
-  IYuplay2Session* yuplay2 = ::yuplay2_create_session("Gaijin.Net Sample App");
+  IYuplay2Session* yuplay2 = createYuplay2Session("Gaijin.Net Sample App");
+
+  if (!yuplay2)
+  {
+    printf("Couldn't create session\n");
+    return 1;
+  }
 
   printf("Session created\n");
 
@@ -67,10 +33,10 @@ int main(int argc, char *argv[])
   std::string totp;
 
   printf("Login: ");
-  login = getLogin();
+  login = ::getLogin();
 
   printf("Password: ");
-  password = getPassword();
+  password = ::getPassword();
 
   Yuplay2Status res;
 
@@ -86,7 +52,7 @@ int main(int argc, char *argv[])
   if (res == YU2_2STEP_AUTH)
   {
     printf("2-step code: ");
-    totp = getLogin();
+    totp = ::getLogin();
 
     res = yuplay2->twoStepLoginSync(login.c_str(), password.c_str(), totp.c_str(), false);
 
@@ -180,4 +146,16 @@ int main(int argc, char *argv[])
 
   yuplay2->free();
   return 0;
+}
+
+
+std::string getLogin()
+{
+  return readConsoleString(0);
+}
+
+
+std::string getPassword()
+{
+  return readConsoleString('*');
 }
