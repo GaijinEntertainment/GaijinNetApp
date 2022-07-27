@@ -11,7 +11,7 @@ int main(int argc, char const *argv[])
     return 1;
   }
 
-  // For the simplification, interaction between client and server is realised througth the direct calls.
+  // For simplify, interaction between client and server is realised througth the direct calls.
   // Server imitates multicliency, but supports only synchronous work.
 
   Server server;

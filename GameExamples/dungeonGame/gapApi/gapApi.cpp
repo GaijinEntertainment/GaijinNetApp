@@ -33,9 +33,11 @@ nlohmann::json UserstatApi::changeStats(
     const std::string & jwt) const
 {
   nlohmann::json params = {
-    {"$mode", {"default"}},
-    {"$tables", {"global"}},
-    {stat_name, value},
+    {"__body__", {
+      {"$mode", {"default"}},
+      {"$tables", {"global"}},
+      {stat_name, value}}
+    }
   };
 
   return jsonRpcClient.post("ChangeStats", params, jwt, userid);

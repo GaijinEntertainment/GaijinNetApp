@@ -3,7 +3,6 @@
 #include <iomanip>
 #include "gameClient.h"
 #include "config.h"
-
 #include "gapApi/gapApi.h"
 
 
