@@ -27,18 +27,15 @@ class JsonRpcClient: public HTTPRequestClient
 
     static std::string gen_transact_id();
 
-    static nlohmann::json make_json_rpc_body(
+    static nlohmann::json make_json_rpc_object(
         const std::string & method,
         const nlohmann::json & params = nlohmann::json::object());
 
-    std::string post_core(
-        const std::string & json_rpc_body,
-        const std::string & jwt,
-        const std::string & userid = "") const;
+    std::string post_core(const std::string & json_rpc_object) const;
 
     nlohmann::json post(
         const std::string & method,
-        const nlohmann::json & params,
+        nlohmann::json & params,
         const std::string & jwt,
         const std::string & userid = "") const;
 };

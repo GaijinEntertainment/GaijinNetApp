@@ -43,35 +43,21 @@ std::string JsonRpcClient::gen_transact_id()
 }
 
 
-std::string JsonRpcClient::post_core(
-    const std::string & json_rpc_body,
-    const std::string & jwt,
-    const std::string & userid) const
+std::string JsonRpcClient::post_core(const std::string & json_rpc_object) const
 {
-  httplib::Headers headers = {
-    {"appid", config::appid},
-    {"token", jwt},
-    {"transactid", gen_transact_id()}
-  };
-
-  if (!userid.empty())
-  {
-    headers.emplace("userid", userid);
-  }
-
-  if (auto res = cli.Post("/json-rpc", headers, json_rpc_body, "application/json"))
+  if (auto res = cli.Post("/json-rpc", json_rpc_object, "application/json"))
   {
     return res->body;
   }
   else
   {
-    std::cerr << "Connection error occurred during the call " << json_rpc_body << res.error() << std::endl;
+    std::cerr << "Connection error occurred during the call " << json_rpc_object << res.error() << std::endl;
   }
   return "";
 }
 
 
-nlohmann::json JsonRpcClient::make_json_rpc_body(const std::string & method, const nlohmann::json & params)
+nlohmann::json JsonRpcClient::make_json_rpc_object(const std::string & method, const nlohmann::json & params)
 {
   return nlohmann::json({
       {"jsonrpc", "2.0"},
@@ -83,11 +69,18 @@ nlohmann::json JsonRpcClient::make_json_rpc_body(const std::string & method, con
 
 nlohmann::json JsonRpcClient::post(
     const std::string & method,
-    const nlohmann::json & params,
+    nlohmann::json & params,
     const std::string & jwt,
     const std::string & userid) const
 {
-  std::string response = post_core(make_json_rpc_body(method, params).dump(), jwt, userid);
+  params["appid"] = config::appid;
+  params["token"] = jwt;
+  params["transactid"] = gen_transact_id();
+
+  if (!userid.empty())
+    params["userid"] = userid;
+
+  std::string response = post_core(make_json_rpc_object(method, params).dump());
   const nlohmann::json parsed_response = parse(response);
 
   if (parsed_response.contains("error"))
