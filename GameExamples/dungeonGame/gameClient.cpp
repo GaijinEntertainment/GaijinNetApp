@@ -146,7 +146,7 @@ void GameClient::rewardUnlockFull(const std::string & name, nlohmann::json & unl
 void GameClient::play(Player & player)
 {
   std::cout << std::endl << "[" << gjnick << ", " << "level " << player.level << "]" << std::endl;
-  std::cout << "You are entering the terrible dugeon..." << std::endl << std::endl;
+  std::cout << "You are entering the terrible dungeon..." << std::endl << std::endl;
 
   bool finishSession = false;
 
