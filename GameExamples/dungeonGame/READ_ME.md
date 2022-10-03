@@ -4,15 +4,12 @@ This application is an example of a game client and server using the Gaijin Appl
 ## Running and authorisation
 [See build requirements below](#build-requirements)
 
-The application is launched by the command with passed login/pass.
-It is need a Gaijin account to log in (to create account visit https://login.gaijin.net/ru/sso/login).
-
-It is also need to enter a 2-step verification code and the game begins.
+The application is launched from the command shell without any parameters. Browser opens automatically with login page. It is possible to use different types of accounts:  
+https://login.gaijin.net/ru/sso/login  
+After successfully logging in, switch back to the shell.
 ```sh
-~$dungeon_game <your_gaijin_email> <pass>
-Input 2-step verification code
-<your_verification_code>
-You are entering the terrible dugeon...
+~$dungeon_game
+You are entering the terrible dungeon...
 ```
 
 ## Gameplay
