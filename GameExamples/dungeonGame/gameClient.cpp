@@ -59,6 +59,8 @@ void GameClient::run()
 
 bool GameClient::login()
 {
+  std::cout << "Waiting for the authorisation. "
+               "Please, check your browser for the login page and switch back." << std::endl;
   if(!authApi.web_login())
     return false;
 
