@@ -1,6 +1,13 @@
 #include <ctime>
+#include <thread>
 #include "requestHelpers.h"
 #include "config.h"
+
+
+void sleep_sec(unsigned timeout_sec)
+{
+  std::this_thread::sleep_for(std::chrono::seconds(timeout_sec));
+}
 
 
 nlohmann::json HTTPRequestClient::parse(const std::string & json)

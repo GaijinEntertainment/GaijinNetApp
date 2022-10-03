@@ -5,6 +5,9 @@
 #include "libs/nlohmann/json.hpp"
 
 
+void sleep_sec(unsigned timeout_sec);
+
+
 class HTTPRequestClient
 {
   public:
@@ -12,6 +15,7 @@ class HTTPRequestClient
 
     static nlohmann::json parse(const std::string & json);
 
+    inline void set_read_timeout(time_t sec, time_t usec){cli.set_read_timeout(sec, usec);};
     std::string post_core(
         const std::string & path,
         const httplib::MultipartFormDataItems & form) const;
