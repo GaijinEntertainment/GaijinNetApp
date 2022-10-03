@@ -13,12 +13,12 @@ public:
     server(server_),
     userstatApi(config::stat_url),
     leaderboardApi(config::leaderboard_url),
-    authApi(config::auth_url){};
+    authApi(config::login_url){};
 
-  void run(const std::string & email, const std::string & pass);
+  void run();
 
 private:
-  bool login(const std::string & email, const std::string & pass);
+  bool login();
   void play(Player & player);
 
   void rewardUnlockFull(const std::string & name, nlohmann::json & unlock) const;

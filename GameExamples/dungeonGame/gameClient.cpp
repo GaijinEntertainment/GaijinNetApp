@@ -39,9 +39,9 @@ nlohmann::json get_unlock_from_resp(
 };
 
 
-void GameClient::run(const std::string & email, const std::string & pass)
+void GameClient::run()
 {
-  if (login(email, pass))
+  if (login())
   {
     nlohmann::json stats = userstatApi.getStats(login_jwt);
     Player player;
@@ -57,38 +57,16 @@ void GameClient::run(const std::string & email, const std::string & pass)
 }
 
 
-bool GameClient::login(const std::string & email, const std::string & pass)
+bool GameClient::login()
 {
-  std::cout << "Input 2-step verification code" << std::endl;
-  std::string code;
-  std::cin >> code;
+  if(!authApi.web_login())
+    return false;
 
-  loginInfo = authApi.auth(email, pass, code);
+  login_jwt = authApi.getJwtToken();
+  userid = authApi.getId();
+  gjnick = authApi.getNick();
 
-  if (loginInfo.contains("error"))
-  {
-    std::cerr << "Login error: " << loginInfo.at("error") << std::endl;
-  }
-  else if (loginInfo.empty())
-  {
-    std::cerr << "Login error: response is empty" << std::endl;
-  }
-  else
-  {
-    try
-    {
-      login_jwt = loginInfo.at("jwt").get<std::string>();
-      userid = loginInfo.at("user_id").get<std::string>();
-      gjnick = loginInfo.at("gjnick").get<std::string>();
-      return true;
-    }
-    catch(const nlohmann::json::out_of_range & e)
-    {
-      std::cerr << "Login error, required field is absent:  " << e.what() << std::endl;
-    }
-
-  }
-  return false;
+  return true;
 }
 
 
@@ -178,7 +156,6 @@ void GameClient::play(Player & player)
     std::cout << std::endl << "Moving through a dark tonnel you meet a " << orc.description << std::endl;
     std::cout << "What will you do?.. (input [k] to kill, any to get back) " << std::endl;
 
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     char decision;
     std::cin >> decision;
 

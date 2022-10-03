@@ -40,8 +40,25 @@ class LeaderboardApi
 class AuthorizationApi
 {
   public:
-    explicit AuthorizationApi(const std::string & auth_url): httpClient(auth_url) {};
-    nlohmann::json auth(const std::string & login, const std::string & pass, const std::string & code) const;
+    explicit AuthorizationApi(const std::string & auth_url): httpClient(auth_url)
+    {
+      httpClient.set_read_timeout(60, 0);
+    };
+
+    bool web_login();
+
+    const std::string & getJwtToken() {return jwt_token;};
+    const std::string & getId() {return userid;};
+    const std::string & getNick() {return gjnick;};
   private:
+    std::string getGsid(const nlohmann::json & optionals = nlohmann::json::object()) const;
+    nlohmann::json getGsidResult(std::string gsid);
+
+    void openBrowser(const std::string & url);
+
+    std::string jwt_token;
+    std::string userid;
+    std::string gjnick;
+
     HTTPRequestClient httpClient;
 };

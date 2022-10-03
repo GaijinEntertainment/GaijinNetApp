@@ -12,7 +12,6 @@ set(SOURCES
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 find_package(OpenSSL REQUIRED)
-
 add_executable(dungeon_game ${SOURCES})
 
 target_link_libraries(${PROJECT_NAME} OpenSSL::SSL)
