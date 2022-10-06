@@ -21,7 +21,7 @@ You can kill opponents indefinitely, the only challenge here is your patience. =
 
 ## Gaijin Application Platfrom API
 ### Terms: stats and unlocks
-"Stat" is an element of user's statictic data. Values of kills count, experiens points, levels - it is all about stat. The "unlock" can be considered as an element of the reward system. It consists of stages, which are unlocked when some condition is done. Stage can give some rewards, e.g. increase a prized stat. Stats and unlocks are configured via GAP web interface. Also you can download/upload them as json files (an example see below).
+"Stat" is an element of user's statistic data. Values of kills count, experiens points, levels - it is all about stat. The "unlock" can be considered as an element of the reward system. It consists of stages, which are unlocked when some condition is done. Stage can give some rewards, e.g. increase a prized stat. Stats and unlocks are configured via GAP web interface. Also you can download/upload them as json files (an example see below).
 
 These example game have several stats and unlocks.
 The stats are:
@@ -35,11 +35,11 @@ The unlocks are:
 - **gems**
 
 ### How it works?
-During the game session player kills the enemys. Defeating enemy gains some exp (dependent of enemy characteristic). This part is a buisness logic of the game. At the session's end server sends the numbers of kills and exp with *ChangeStats* method of GAP API.
+During the game session player kills the enemys. Defeating an enemy gives some exp (dependent on enemy characteristic). This part is a buisness logic of the game. At the session's end server sends the numbers of kills and exp with *ChangeStats* method of GAP API.
 
-You can seen in the next section the configs, which describes the next following mechanism.
+In the [configs section](#configs) you can see the configs, which describe the following mechanism.
 
-Incrementing of the *exp* stat affects on the **level** unlock. First 3 points unlock the first stage, which increase *level* stat by one point. Next 7 points make the summary exp 10 and the second stage of the **level** unlock increases *level* stat by another point. This means character now have level 2. And finally every next 25 exp points will give level up, because **level** unlock has option *startStageLoop* with value 3, what means repeat the third stage.
+Incrementing of the *exp* stat affects on the **level** unlock. First 3 points unlock the first stage, which increase *level* stat by one point. Next 7 points make the summary exp 10 and the second stage of the **level** unlock increases *level* stat by another point. This means character now has level 2. And finally every next 25 exp points will give level up, because **level** unlock has option *startStageLoop* with value 3, what means repeat the third stage.
 
 So, if the character has *level* 0 and receives 35 points at once, he reaches *level* 3. This happens automatically, because the **level** unlock has the option *autoRewarding*.
 
@@ -172,7 +172,7 @@ As seen from the title, this is a implemetation of some GAP API methods:
 - *cln_get_leaderboard* - for access to the leaderboard
 
 ### server
-This part imitates a backend application. It realizes some game engine: enemies generation, battle mechanics, etc. Also it sends game session statistics to the GAP.
+This part imitates a backend application. It realizes some game mechanics: enemies generation, battle mechanics, etc. Also it sends game session statistics to the GAP.
 
 ### gameClient
 This is a user-side application. It provides several features for user:
