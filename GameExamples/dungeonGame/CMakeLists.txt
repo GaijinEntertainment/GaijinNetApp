@@ -11,6 +11,7 @@ set(SOURCES
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+set(OPENSSL_USE_STATIC_LIBS TRUE)
 find_package(OpenSSL REQUIRED)
 add_executable(dungeonGame ${SOURCES})
 

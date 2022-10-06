@@ -2,7 +2,8 @@
 This application is an example of a game client and server using the Gaijin Application Platfrom (initials GAP). For simplicity, communication between the client and the server is implemented through direct calls that simulate client-server API interaction. The game client has a simple text interface.
 
 ## Running and authorisation
-[See build requirements below](#build-requirements)
+The compiled binaries are located in the **bin** foldier.
+[See build requirements below](#build-requirements) for your own build.
 
 The application is launched from the command shell without any parameters. Browser opens automatically with login page. It is possible to use different types of accounts:  
 https://login.gaijin.net/ru/sso/login  
