@@ -121,16 +121,40 @@ void GameClient::grantRewards(Player & player) const
 
 void GameClient::showLeaderboard() const
 {
+  const int lbCount = 10;
   nlohmann::json leaderboard = leaderboardApi.getLeaderboard("kills", "global", "default", 1,
-                                                                10, login_jwt).at("result");
+                                                                lbCount, login_jwt).at("result");
 
-  std::cout << std::endl << "At the exit written the exploits of great heroes." << std::endl;
+  std::vector<nlohmann::json> orderedLb(lbCount);
 
-  std::cout << std::setw(20) << std::left << "Name" << "Defeated enemies" << std::endl;
   for (nlohmann::json::iterator it = leaderboard.begin(); it != leaderboard.end(); ++it)
   {
-    std::cout << std::setw(20) << std::left << it.key()
-              << it.value().at("kills").at("value_total").get<int>() << std::endl;
+    const int place = it.value().at("idx");
+
+    if (place >= lbCount)
+    {
+      std::cerr << "Can't show leaderboard: wrong data received." << std::endl;
+      return;
+    }
+    else
+    {
+      nlohmann::json playerData({
+        {"player_name", it.key()},
+        {"total_kills", it.value().at("kills").at("value_total")}});
+      orderedLb[place] = playerData;
+    }
+  }
+
+  std::cout << std::endl << "At the exit written the exploits of great heroes." << std::endl;
+  std::cout << std::setw(20) << std::left << "Name" << "Defeated enemies" << std::endl;
+
+  for (auto it = orderedLb.begin(); it != orderedLb.end(); ++it)
+  {
+    if(!it->empty())
+    {
+      std::cout << std::setw(20) << std::left << it->at("player_name").get<std::string>()
+                                              << it->at("total_kills").get<int>() << std::endl;
+    }
   }
 }
 
