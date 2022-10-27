@@ -9,26 +9,26 @@ const std::string STATUS_ = "status";
 
 nlohmann::json UserstatApi::getStats(const std::string & jwt) const
 {
-  nlohmann::json params;
-  return jsonRpcClient.post("GetStats", params, jwt);
+  nlohmann::json body;
+  return post("GetStats", body, jwt);
 }
 
 
 nlohmann::json UserstatApi::getUnlocks(const std::string & jwt) const
 {
-  nlohmann::json params;
-  return jsonRpcClient.post("GetUnlocks", params, jwt);
+  nlohmann::json body;
+  return post("GetUnlocks", body, jwt);
 }
 
 
 nlohmann::json UserstatApi::rewardUnlock(const std::string & unlock, int stage, const std::string & jwt) const
 {
-  nlohmann::json params = {
+  nlohmann::json body = {
     {"unlock", unlock},
     {"stage", stage},
   };
 
-  return jsonRpcClient.post("GrantRewards", params, jwt);
+  return post("GrantRewards", body, jwt);
 }
 
 
@@ -38,15 +38,24 @@ nlohmann::json UserstatApi::changeStats(
     const std::string & userid,
     const std::string & jwt) const
 {
-  nlohmann::json params = {
-    {"__body__", {
-      {"$mode", {"default"}},
-      {"$tables", {"global"}},
-      {stat_name, value}}
-    }
+  nlohmann::json body = {
+    {"$mode", {"default"}},
+    {"$tables", {"global"}},
+    {stat_name, value}
   };
 
-  return jsonRpcClient.post("ChangeStats", params, jwt, userid);
+  return post("ChangeStats", body, jwt, userid);
+}
+
+
+nlohmann::json UserstatApi::post(
+    const std::string & method,
+    nlohmann::json & body,
+    const std::string & jwt,
+    const std::string & userid) const
+{
+  nlohmann::json params = {{"__body__", body}};
+  return jsonRpcClient.post(method, params, jwt, userid);
 }
 
 

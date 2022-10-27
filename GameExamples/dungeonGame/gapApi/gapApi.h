@@ -17,6 +17,11 @@ class UserstatApi
         const std::string & userid,
         const std::string & jwt) const;
   private:
+    nlohmann::json post(
+        const std::string & method,
+        nlohmann::json & body,
+        const std::string & jwt,
+        const std::string & userid = "") const;
     JsonRpcClient jsonRpcClient;
 };
 
