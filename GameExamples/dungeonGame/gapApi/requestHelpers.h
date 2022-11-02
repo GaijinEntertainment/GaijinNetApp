@@ -5,6 +5,9 @@
 #include "libs/nlohmann/json.hpp"
 
 
+static constexpr int64_t NULL_USERID = 0;
+
+
 void sleep_sec(unsigned timeout_sec);
 
 
@@ -41,5 +44,5 @@ class JsonRpcClient: public HTTPRequestClient
         const std::string & method,
         nlohmann::json & params,
         const std::string & jwt,
-        const std::string & userid = "") const;
+        const int64_t userid = NULL_USERID) const;
 };

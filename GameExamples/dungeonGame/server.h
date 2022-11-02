@@ -17,14 +17,14 @@ class Server
 {
 public:
   explicit Server(): userstatApi(config::stat_url) {};
-  void startSession(const std::string & userid) const;
-  SessionStats endSession(const std::string & userid) const;
-  SessionStats getSessionStats(const std::string & userid) const;
+  void startSession(const int64_t userid) const;
+  SessionStats endSession(const int64_t userid) const;
+  SessionStats getSessionStats(const int64_t userid) const;
 
-  Orc generateRandomOrc(const std::string & userid) const;
-  int hitCurrentOrc(const std::string & userid) const;
+  Orc generateRandomOrc(const int64_t userid) const;
+  int hitCurrentOrc(const int64_t userid) const;
 
 private:
   UserstatApi userstatApi;
-  mutable std::unordered_map<std::string, GameSession> gameSessions;
+  mutable std::unordered_map<int64_t, GameSession> gameSessions;
 };
