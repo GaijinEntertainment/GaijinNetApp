@@ -43,10 +43,10 @@ std::string HTTPRequestClient::post_core(
 }
 
 
-std::string JsonRpcClient::gen_transact_id()
+int64_t JsonRpcClient::gen_transact_id()
 {
   static time_t seed = std::time(nullptr);
-  return std::to_string(++seed);
+  return ++seed;
 }
 
 
