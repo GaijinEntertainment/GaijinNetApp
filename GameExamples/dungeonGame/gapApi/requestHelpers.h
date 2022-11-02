@@ -32,7 +32,7 @@ class JsonRpcClient: public HTTPRequestClient
   public:
     explicit JsonRpcClient(const std::string & url): HTTPRequestClient(url) {};
 
-    static std::string gen_transact_id();
+    static int64_t gen_transact_id();
 
     static nlohmann::json make_json_rpc_object(
         const std::string & method,
