@@ -78,13 +78,13 @@ nlohmann::json JsonRpcClient::post(
     const std::string & method,
     nlohmann::json & params,
     const std::string & jwt,
-    const std::string & userid) const
+    const int64_t userid) const
 {
   params["appid"] = config::appid;
   params["token"] = jwt;
   params["transactid"] = gen_transact_id();
 
-  if (!userid.empty())
+  if (userid != NULL_USERID)
     params["userid"] = userid;
 
   std::string response = post_core(make_json_rpc_object(method, params).dump());

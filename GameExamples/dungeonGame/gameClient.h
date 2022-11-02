@@ -34,6 +34,6 @@ private:
 
   nlohmann::json loginInfo;
   std::string login_jwt;
-  std::string userid;
+  int64_t userid;
   std::string gjnick;
 };

@@ -3,7 +3,7 @@
 #include "gapApi/gapApi.h"
 
 
-Orc Server::generateRandomOrc(const std::string & userid) const
+Orc Server::generateRandomOrc(const int64_t userid) const
 {
   static int seed = 0;
   seed++;
@@ -12,7 +12,7 @@ Orc Server::generateRandomOrc(const std::string & userid) const
 }
 
 
-int Server::hitCurrentOrc(const std::string & userid) const
+int Server::hitCurrentOrc(const int64_t userid) const
 {
   GameSession & gameSession = gameSessions[userid];
 
@@ -24,13 +24,13 @@ int Server::hitCurrentOrc(const std::string & userid) const
 }
 
 
-void Server::startSession(const std::string & userid) const
+void Server::startSession(const int64_t userid) const
 {
   gameSessions.emplace(userid, GameSession());
 }
 
 
-SessionStats Server::endSession(const std::string & userid) const
+SessionStats Server::endSession(const int64_t userid) const
 {
   GameSession & gameSession = gameSessions[userid];
 
@@ -44,7 +44,7 @@ SessionStats Server::endSession(const std::string & userid) const
 }
 
 
-SessionStats Server::getSessionStats(const std::string & userid) const
+SessionStats Server::getSessionStats(const int64_t userid) const
 {
   return gameSessions[userid].sessionStats;
 }

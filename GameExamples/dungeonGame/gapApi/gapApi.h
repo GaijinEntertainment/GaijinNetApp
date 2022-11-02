@@ -14,14 +14,14 @@ class UserstatApi
     nlohmann::json changeStats(
         const std::string & stat_name,
         int value,
-        const std::string & userid,
+        const int64_t userid,
         const std::string & jwt) const;
   private:
     nlohmann::json post(
         const std::string & method,
         nlohmann::json & body,
         const std::string & jwt,
-        const std::string & userid = "") const;
+        const int64_t userid = NULL_USERID) const;
     JsonRpcClient jsonRpcClient;
 };
 
@@ -53,7 +53,7 @@ class AuthorizationApi
     bool web_login();
 
     const std::string & getJwtToken() {return jwt_token;};
-    const std::string & getId() {return userid;};
+    int64_t getId() {return userid;};
     const std::string & getNick() {return gjnick;};
   private:
     std::string getGsid(const nlohmann::json & optionals = nlohmann::json::object()) const;
@@ -62,7 +62,7 @@ class AuthorizationApi
     void openBrowser(const std::string & url);
 
     std::string jwt_token;
-    std::string userid;
+    int64_t userid;
     std::string gjnick;
 
     HTTPRequestClient httpClient;

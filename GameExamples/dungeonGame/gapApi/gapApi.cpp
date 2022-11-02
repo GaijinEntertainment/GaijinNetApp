@@ -35,7 +35,7 @@ nlohmann::json UserstatApi::rewardUnlock(const std::string & unlock, int stage, 
 nlohmann::json UserstatApi::changeStats(
     const std::string & stat_name,
     int value,
-    const std::string & userid,
+    const int64_t userid,
     const std::string & jwt) const
 {
   nlohmann::json body = {
@@ -52,7 +52,7 @@ nlohmann::json UserstatApi::post(
     const std::string & method,
     nlohmann::json & body,
     const std::string & jwt,
-    const std::string & userid) const
+    const int64_t userid) const
 {
   nlohmann::json params = {{"__body__", body}};
   return jsonRpcClient.post(method, params, jwt, userid);
@@ -103,7 +103,7 @@ bool AuthorizationApi::web_login()
         if (gsid_result.at(STATUS_) == "OK")
         {
           jwt_token = gsid_result.at("jwt");
-          userid = gsid_result.at("user_id");
+          userid = atoll(gsid_result.at("user_id").get<std::string>().c_str());
           gjnick = gsid_result.at("nick");
 
           successLogin = true;
