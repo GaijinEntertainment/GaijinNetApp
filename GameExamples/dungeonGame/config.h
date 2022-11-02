@@ -9,8 +9,7 @@ namespace config
   const std::string stat_url = "http://test-char-01.gaijin.lan:13080";
   const std::string leaderboard_url = "http://moon-contact.gaijin.ops:7443";
 
-  const std::string appid = "1197";
-  const unsigned app_perm_id = 50017;
+  const int appid = 1197;
 
   const std::string server_jwt =
       "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJhdWQiOiI1NCIsImV4cCI6MTg5NDY2NTYwMCwiaGFzaCI"
