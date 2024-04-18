@@ -47,7 +47,7 @@ The request is just simple:
 
 These methods need to be implemented for correct interaction with the profile server.
 
-`reinitProfile` will be automatically called when a player's profile is loaded from the database.
+`reinitProfile` will be automatically called when a player's profile is loaded from the database. Here, the player's items are actualized with database owners' storage (the mechanism is used to find the owner of the item).
 
 `get_script_global_vars` is automatically called to check if there have been updates to the configuration of tradable items.
 
