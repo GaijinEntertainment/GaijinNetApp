@@ -24,7 +24,8 @@ This section contains helper methods for creating profiles and experiments.
 
 `get_profile` creates a profile for the user (in case it's absent, other methods may return an error).
 
-The names `reinit_with_sample_items` and `clear_transaction_history` are self-explanatory.
+The names `reinit_with_sample_items`, `clear_items` and `clear_transaction_history` are self-explanatory.
+Note that they are annotated with `admin_panel`. Actions with this annotation are displayed (and can be called) in the user management section on the dev-portal.
 
 To use this methods you will need to set the headers:
 
