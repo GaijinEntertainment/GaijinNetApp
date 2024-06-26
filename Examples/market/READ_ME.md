@@ -6,7 +6,9 @@ The description of the Market API can be found here: [https://gaijinentertainmen
 
 ## Overview
 
-This example aims to demonstrate a possible implementation of scripts for organizing trading on the market. Here are some notes on this.
+This examples aims to demonstrate a possible implementation of scripts for organizing trading on the market. Here are some notes on this.
+- `simple_example` - the simplest example demonstrating basic mechanics
+- `non_commodity_example` - an extended example where non-commodity items have been added
 
 ### base_entities
 
