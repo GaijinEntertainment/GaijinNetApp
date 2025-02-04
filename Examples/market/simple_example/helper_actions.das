@@ -14,7 +14,7 @@ def get_profile()
 [jsonrpc_method(admin_panel)]
 def reinit_with_sample_items()
   clear(persist.items)
-  var itemid <- generate_itemid()
+  var itemid = generate_itemid()
   persist.items[itemid] <- [[Item item_type = "big_health_potion", id = itemid, count = 10u]]
   add_items_to_db([{uint64 item_id_to_uint64(itemid)}])
   send_result(persist)

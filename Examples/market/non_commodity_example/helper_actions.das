@@ -15,7 +15,7 @@ def get_profile()
 def reinit_with_sample_items()
   clear(persist.items)
 
-  var itemid <- generate_itemid()
+  var itemid = generate_itemid()
   persist.items[itemid] <- [[Item item_type = "big_health_potion", id = itemid, count = 10u]]
 
   itemid = generate_itemid()
